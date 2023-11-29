@@ -8,48 +8,50 @@ const loader = document.getElementById('loader');
 let apiQuotes = [];
 
 // Show loading
-function loading() {
+function showLoadingSpinner() {
     loader.hidden = false;
     quoteContainer.hidden = true;
 }
 
 // Hide loading
-function complete() {
+function removeLoadingSpinner() {
     quoteContainer.hidden = false;
     loader.hidden = true;
 }
 
 // Show new quote
 function newQuote() {
-    loading(); // For when the new quote button is pressed
+    showLoadingSpinner(); // For when the new quote button is pressed
     // Pick a random quote from apiQuotes array
     const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
-    // To check if author field is blank, and replace with 'Unknown'
-    if (!quote.author) {
-        authorText.textContent = 'Unknown';
-    }
-    else {
-        authorText.textContent = quote.author;
-    }
+    // Check if author field is blank and replace with 'Unknown' if true
+    authorText.textContent = !quote.author ? 'Unknown' : quote.author;
     // Check quote length to determine styling
     if (quote.text.length > 120) {
         quoteText.classList.add('long-quote');
-    }
+    }   
     else {
         quoteText.classList.remove('long-quote');
     }
     // Set the quote, hide the loader
     quoteText.textContent = quote.text;
-    complete();
+    removeLoadingSpinner();
+}
+
+// Tweet quote
+function tweetQuote() {
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${quoteText.textContent} - ${authorText.textContent}`;
+    window.open(twitterUrl, '_blank');
 }
 
 // Get quotes from API
 async function getQuotes() {
-    loading();
-    const apiUrl = "https://jacintodesign.github.io/quotes-api/data/quotes.json";
-    // const apiUrl = "https://zenquotes.io/api/today/";
+    showLoadingSpinner();
+    const proxyUrl = 'https://cors-anywhere.herokupapp.com/'
+    // const apiUrl = "https://jacintodesign.github.io/quotes-api/data/quotes.json";
+    const apiUrl = "https://zenquotes.io/api/today/";
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(proxyUrl + apiUrl);
         apiQuotes = await response.json();
         newQuote();
     } catch (error) {
@@ -61,12 +63,6 @@ async function getQuotes() {
 // Event Listeners
 newQuoteBtn.addEventListener('click', newQuote);
 twitterBtn.addEventListener('click', tweetQuote);
-
-// Tweet quote
-function tweetQuote() {
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${quoteText.textContent} - ${authorText.textContent}`;
-    window.open(twitterUrl, '_blank');
-}
 
 // On load
 getQuotes();
