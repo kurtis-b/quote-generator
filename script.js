@@ -49,7 +49,7 @@ async function getQuotes() {
     showLoadingSpinner();
     const apiUrl = "https://jacintodesign.github.io/quotes-api/data/quotes.json";
     try {
-        const response = await fetch(proxyUrl + apiUrl);
+        const response = await fetch(apiUrl);
         apiQuotes = await response.json();
         newQuote();
     } catch (error) {
