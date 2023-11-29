@@ -47,9 +47,7 @@ function tweetQuote() {
 // Get quotes from API
 async function getQuotes() {
     showLoadingSpinner();
-    const proxyUrl = 'https://cors-anywhere.herokupapp.com/'
-    // const apiUrl = "https://jacintodesign.github.io/quotes-api/data/quotes.json";
-    const apiUrl = "https://zenquotes.io/api/today/";
+    const apiUrl = "https://jacintodesign.github.io/quotes-api/data/quotes.json";
     try {
         const response = await fetch(proxyUrl + apiUrl);
         apiQuotes = await response.json();
